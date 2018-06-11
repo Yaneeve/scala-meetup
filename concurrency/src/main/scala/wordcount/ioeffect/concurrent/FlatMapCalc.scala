@@ -1,15 +1,19 @@
-package wordcount.concurrent
+package wordcount.ioeffect.concurrent
 
 import java.util.concurrent.Executors
 
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
+import wordcount.alg.Alg
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import ExecutionContext.Implicits.global
 
-object FlatMapCalc extends App with LazyLogging {
+import cats.Semigroup
+import cats.implicits._
+
+object FlatMapCalc extends App with Alg with LazyLogging {
 
 //  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
 
@@ -17,29 +21,22 @@ object FlatMapCalc extends App with LazyLogging {
 
   val texts: (Array[String], Array[String]) = Text.aTaleOfTwoCities.splitAt(Text.aTaleOfTwoCities.length/2)
 
-  val map1 = IO {
-    logger.info(s"HAL 1 here, just to inform you that I will take care of ${texts._1.head} ...")
-    texts._1.groupBy(identity).map { case (key, arr) => (key, arr.length) }
-  }
+  val wordCount1 = IO(mapReduce(texts._1, Some(1)))
 
-  val map2 = IO {
-    logger.info(s"HAL 2 here, just to inform you that I will take care of ${texts._2.head} ...")
-    texts._2.groupBy(identity).map { case (key, arr) => (key, arr.length) }
-  }
-
-  import cats.Semigroup
-  import cats.implicits._
+  val wordCount2 = IO(mapReduce(texts._2, Some(2)))
 
   implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
 
-  private val eventualMapReduce: IO[Map[String, Int]] = for {
-    m1 <- map1 //<* IO.shift
-    m2 <- map2 //<* IO.shift
+  val eventualWordCount: IO[Map[String, Int]] = for {
+    m1 <- wordCount1 //<* IO.shift
+    m2 <- wordCount2 //<* IO.shift
   } yield m1 |+| m2
 
-  private val max: IO[(String, Int)] = eventualMapReduce.map(_.maxBy(_._2))
+  val max: IO[(String, Int)] = eventualWordCount.map(max(_))
+
   val end = System.nanoTime()
-  val print: IO[Seq[Unit]] = eventualMapReduce.map(_.toSeq).map(_.map(tup => logger.debug(tup.toString)))
+
+  val print: IO[Seq[Unit]] = eventualWordCount.map(_.toSeq).map(_.map(tup => logger.debug(tup.toString)))
   val winner: IO[Unit] = max.map(m =>
   logger.info("---> and the winner is: " + m + " <--- calc time is :" +  (end - start)/1000000.0))
 

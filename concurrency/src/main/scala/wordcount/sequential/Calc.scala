@@ -2,17 +2,18 @@ package wordcount.sequential
 
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
+import wordcount.alg.Alg
 
-object Calc extends App with LazyLogging {
+object Calc extends App with Alg with LazyLogging {
 
   val start = System.nanoTime()
 
-  val mapReduce = Text.aTaleOfTwoCities.groupBy(identity).map { case (key, arr) => (key, arr.length) }
-  val max: (String, Int) = mapReduce.maxBy(_._2)
+  val wordCount = mapReduce(Text.aTaleOfTwoCities)
+  val max: (String, Int) = max(wordCount)
 
   val end = System.nanoTime()
 
-  mapReduce.toSeq.foreach(tup => logger.debug(tup.toString))
+  wordCount.toSeq.foreach(tup => logger.debug(tup.toString))
   logger.info("---> and the winner is: " + max + " <--- calc time is :" +  (end - start)/1000000.0)
 
 

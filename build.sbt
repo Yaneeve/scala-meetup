@@ -28,3 +28,10 @@ lazy val actor = project.settings(commonSettings,
   libraryDependencies := commonLibs ++ Seq(
     "com.typesafe.akka" %% "akka-actor" % "2.5.13"
   ))
+
+lazy val concurrency = project.settings(commonSettings,
+  libraryDependencies := commonLibs ++ Seq(
+    "com.typesafe.akka" %% "akka-actor" % "2.5.13",
+    "org.typelevel" %% "cats-effect" % "1.0.0-RC2"
+  )
+)
