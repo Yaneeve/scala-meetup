@@ -8,7 +8,7 @@ import wordcount.Text
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 
-object Calc extends App with LazyLogging {
+object FlatMapCalc extends App with LazyLogging {
 
   implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
 
@@ -31,7 +31,10 @@ object Calc extends App with LazyLogging {
 
   implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
 
-  private val eventualMapReduce: IO[Map[String, Int]] = (map1, map2).parMapN(_ |+| _)
+  private val eventualMapReduce: IO[Map[String, Int]] = for {
+    m1 <- map1 //<* IO.shift
+    m2 <- map2 //<* IO.shift
+  } yield m1 |+| m2
 
   private val max: IO[(String, Int)] = eventualMapReduce.map(_.maxBy(_._2))
   val end = System.nanoTime()
@@ -45,10 +48,5 @@ object Calc extends App with LazyLogging {
   } yield ()
 
   prog.unsafeRunSync()
-
-//  import scala.concurrent.Await.result
-//  import scala.concurrent.duration._
-//
-//  result(max, 15 seconds)
 
 }
