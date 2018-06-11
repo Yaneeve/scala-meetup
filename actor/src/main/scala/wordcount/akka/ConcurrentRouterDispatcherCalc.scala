@@ -15,7 +15,7 @@ object ConcurrentRouterDispatcherCalc extends App with LazyLogging {
   case class Count(words: Map[String, Int])
   case class Next(actorRef: ActorRef)
 
-  class Mapper extends Actor with LazyLogging {
+  class Mapper extends Actor {
     override def receive: Receive = {
       case Next(actorRef) => context.become(active(actorRef))
     }
@@ -24,12 +24,13 @@ object ConcurrentRouterDispatcherCalc extends App with LazyLogging {
       case PayLoad(text) =>
         logger.info(s"HAL ${self.path} here, just to inform you that I will take care of ${text.head} ...")
         val words = text.groupBy(identity).map { case (key, arr) => (key, arr.length) }
+        cpuIntensive
         actorRef ! Count(words)
     }
   }
 
 
-  class MaxLocator extends Actor with LazyLogging {
+  class MaxLocator extends Actor  {
 
 
     implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
@@ -64,5 +65,7 @@ object ConcurrentRouterDispatcherCalc extends App with LazyLogging {
   router ! PayLoad(texts._1)
   router ! PayLoad(texts._2)
 
+
+  def cpuIntensive = 1 to 10 foreach {_ => ((1 to Int.MaxValue)) foreach { i => Math.sqrt(i.toDouble) }}
 
 }

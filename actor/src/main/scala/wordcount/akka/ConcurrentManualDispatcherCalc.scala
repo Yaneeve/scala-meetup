@@ -1,10 +1,12 @@
 package wordcount.akka
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import cats.Semigroup
 import cats.implicits._
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
+
+import scala.util.Random
 
 object ConcurrentManualDispatcherCalc extends App with LazyLogging {
 
@@ -14,7 +16,7 @@ object ConcurrentManualDispatcherCalc extends App with LazyLogging {
   case class Count(words: Map[String, Int])
   case class Next(actorRef: ActorRef)
 
-  class Mapper extends Actor with LazyLogging {
+  class Mapper extends Actor {//LazyLogging {
     override def receive: Receive = {
       case Next(actorRef) => context.become(active(actorRef))
     }
@@ -23,12 +25,13 @@ object ConcurrentManualDispatcherCalc extends App with LazyLogging {
       case PayLoad(text) =>
         logger.info(s"HAL ${self.path} here, just to inform you that I will take care of ${text.head} ...")
         val words = text.groupBy(identity).map { case (key, arr) => (key, arr.length) }
+//        cpuIntensive
         actorRef ! Count(words)
     }
   }
 
 
-  class MaxLocator extends Actor with LazyLogging {
+  class MaxLocator extends Actor /*with LazyLogging*/ {
 
 
     implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
@@ -65,5 +68,7 @@ object ConcurrentManualDispatcherCalc extends App with LazyLogging {
   mapper1 ! PayLoad(texts._1)
   mapper2 ! PayLoad(texts._2)
 
+
+  def cpuIntensive = 1 to 10 foreach {_ => ((1 to Int.MaxValue)) foreach { i => Math.sqrt(i.toDouble) }}
 
 }
