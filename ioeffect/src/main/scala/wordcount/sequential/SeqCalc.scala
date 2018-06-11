@@ -1,16 +1,14 @@
-package wordcount.concurrent
+package wordcount.sequential
 
-import java.util.concurrent.Executors
 
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
+import scala.concurrent.ExecutionContext.Implicits.global
 
-object Calc extends App with LazyLogging {
 
-  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
+object SeqCalc extends App with LazyLogging {
 
   val start = System.nanoTime()
 
@@ -31,7 +29,8 @@ object Calc extends App with LazyLogging {
 
   implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
 
-  private val eventualMapReduce: IO[Map[String, Int]] = (map1, map2).parMapN(_ |+| _)
+
+  private val eventualMapReduce: IO[Map[String, Int]] = (map1, map2).mapN(_ |+| _)
 
   private val max: IO[(String, Int)] = eventualMapReduce.map(_.maxBy(_._2))
   val end = System.nanoTime()
@@ -46,9 +45,5 @@ object Calc extends App with LazyLogging {
 
   prog.unsafeRunSync()
 
-//  import scala.concurrent.Await.result
-//  import scala.concurrent.duration._
-//
-//  result(max, 15 seconds)
 
 }

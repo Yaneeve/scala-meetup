@@ -7,10 +7,11 @@ import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
+import ExecutionContext.Implicits.global
 
 object FlatMapCalc extends App with LazyLogging {
 
-  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
+//  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
 
   val start = System.nanoTime()
 

@@ -9,21 +9,22 @@ lazy val commonSettings = Seq(
 
 lazy val commonLibs = Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0",
+  "org.typelevel" %% "cats-core" % "1.0.1",
+  "org.typelevel" %% "cats-kernel" % "1.0.1",
+  "org.typelevel" %% "cats-macros" % "1.0.1"
 )
 
 
 lazy val future = project.settings(commonSettings,
-  libraryDependencies := commonLibs ++ Seq(
-    "org.typelevel" %% "cats-core" % "1.0.1",
-    "org.typelevel" %% "cats-kernel" % "1.0.1",
-    "org.typelevel" %% "cats-macros" % "1.0.1"
-  ))
+  libraryDependencies := commonLibs )
 
 lazy val ioeffect = project.settings(commonSettings,
   libraryDependencies := commonLibs ++ Seq(
-    "org.typelevel" %% "cats-core" % "1.0.1",
-    "org.typelevel" %% "cats-kernel" % "1.0.1",
-    "org.typelevel" %% "cats-macros" % "1.0.1",
     "org.typelevel" %% "cats-effect" % "1.0.0-RC2"
+  ))
+
+lazy val actor = project.settings(commonSettings,
+  libraryDependencies := commonLibs ++ Seq(
+    "com.typesafe.akka" %% "akka-actor" % "2.5.13"
   ))
