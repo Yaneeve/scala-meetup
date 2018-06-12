@@ -13,6 +13,8 @@ import cats.Semigroup
 import cats.implicits._
 import wordcount.alg.Alg
 
+import scala.language.postfixOps
+
 object ConcurrentCalc extends App with Alg with LazyLogging {
 
   //  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))

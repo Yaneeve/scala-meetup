@@ -8,8 +8,6 @@ import wordcount.alg.Alg
 
 object ActorCalcModule extends Alg with LazyLogging {
 
-
-
   case class PayLoad(text: Array[String])
   case class Count(words: Map[String, Int])
   case class Next(actorRef: ActorRef)

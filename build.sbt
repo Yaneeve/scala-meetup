@@ -4,7 +4,8 @@ lazy val commonSettings = Seq(
   organization := "yaneeve",
   version := "0.1.0",
   scalaVersion := "2.12.6",
-  scalacOptions += "-Ypartial-unification"
+  scalacOptions += "-Ypartial-unification",
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 )
 
 lazy val commonLibs = Seq(
@@ -15,23 +16,12 @@ lazy val commonLibs = Seq(
   "org.typelevel" %% "cats-macros" % "1.0.1"
 )
 
-
-lazy val future = project.settings(commonSettings,
-  libraryDependencies := commonLibs )
-
-lazy val ioeffect = project.settings(commonSettings,
-  libraryDependencies := commonLibs ++ Seq(
-    "org.typelevel" %% "cats-effect" % "1.0.0-RC2"
-  ))
-
-lazy val actor = project.settings(commonSettings,
-  libraryDependencies := commonLibs ++ Seq(
-    "com.typesafe.akka" %% "akka-actor" % "2.5.13"
-  ))
-
 lazy val concurrency = project.settings(commonSettings,
   libraryDependencies := commonLibs ++ Seq(
     "com.typesafe.akka" %% "akka-actor" % "2.5.13",
     "org.typelevel" %% "cats-effect" % "1.0.0-RC2"
   )
 )
+
+lazy val errors = project.settings(commonSettings,
+  libraryDependencies := commonLibs)
