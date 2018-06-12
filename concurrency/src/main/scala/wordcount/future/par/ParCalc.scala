@@ -2,9 +2,9 @@ package wordcount.future.par
 
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text
-import wordcount.alg.Alg
+import wordcount.alg.ParAlg
 
-object ParCalc extends App with Alg with LazyLogging {
+object ParCalc extends App with ParAlg with LazyLogging {
 
   val start = System.nanoTime()
 

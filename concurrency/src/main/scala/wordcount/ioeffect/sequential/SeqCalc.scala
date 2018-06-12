@@ -16,9 +16,9 @@ object SeqCalc extends App with Alg with LazyLogging {
 
   val texts: (Array[String], Array[String]) = Text.aTaleOfTwoCities.splitAt(Text.aTaleOfTwoCities.length/2)
 
-  val wordCount1 = IO(mapReduce(texts._1, Some(1)))
+  val wordCount1 = IO(mapReduce(texts._1, Some("1")))
 
-  val wordCount2 = IO(mapReduce(texts._2, Some(2)))
+  val wordCount2 = IO(mapReduce(texts._2, Some("2")))
 
   implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
 
