@@ -18,14 +18,12 @@ object Exceptional extends App with LazyLogging {
   }
 
   def calculate(a: Int, b: Int, c: Int): String = {
-    var ohHoridVar: String = "default return value"
     try {
-      ohHoridVar = compute(a, b + c).toString
-      ohHoridVar
+      compute(a, b + c).toString
     } catch {
-      case ShouldntDoThat => logger.warn("tsk tsk"); ""
+      case ShouldntDoThat => logger.warn("tsk tsk");  "default return value"
     } finally {
-      ohHoridVar
+      //"finally it happened to me"
     }
   }
 
