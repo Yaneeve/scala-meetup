@@ -8,34 +8,39 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
+import cats.effect.IO
+
 
 object ExceptionalIO extends App with LazyLogging {
 
   case object ShouldntDoThat extends Exception
 
-  def divide(dividend: Int, divisor: Int): Future[Float] = Future {
-    if (divisor == 0 ) throw ShouldntDoThat // new RuntimeException("didn't see that coming")
-    else dividend.toFloat / divisor
+  def divide(dividend: Int, divisor: Int): IO[Float] =
+    if (divisor == 0 )
+      IO.fromEither(Left(ShouldntDoThat))
+//      IO.raiseError(ShouldntDoThat)
+    ///throw ShouldntDoThat
+    else IO {dividend.toFloat / divisor
   }
 
-  def compute(a: Int, b: Int): Future[Float] = {
-    divide(a, b).andThen{ case _ =>
-    logger.info("I divide now I conquer")}
-  }
+  def compute(a: Int, b: Int): IO[Float] = for {
+  f <- divide(a, b)
+  _ <- IO(logger.info("I divide now I conquer"))
+  } yield f
 
-  def calculate(a: Int, b: Int, c: Int): Future[String] = {
+  def calculate(a: Int, b: Int, c: Int): IO[String] = {
       compute(a, b + c).map(_.toString)
   }
 
 
-  result(
-    for {
+
+  (for {
     calc1 <- calculate(1, 2, 3) //pass
     calc2 <- calculate(1, -1, 1) //fail
   } yield {
     logger.info(calc1)
     logger.info(calc2)
-  }, 5 seconds)
+  }).unsafeRunSync()
 
 //  result(
 //  (calculate(1, 2, 3), //pass
