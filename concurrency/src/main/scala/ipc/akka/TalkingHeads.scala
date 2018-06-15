@@ -53,7 +53,7 @@ object TalkingHeads extends App {
   val system = ActorSystem("talking-heads")
 
   val adam = system.actorOf(Props[Interlocutor], "adam")
-  val beatrix = system.actorOf(Props[Interlocutor], "beatrix")
+  val beatrix = system.actorOf(Props[Interlocutor], "btrx")
 
   adam ! ConversationPartner(beatrix)
   beatrix ! ConversationPartner(adam)
