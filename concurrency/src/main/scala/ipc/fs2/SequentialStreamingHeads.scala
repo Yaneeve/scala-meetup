@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 import fs2.{Chunk, Pure, Stream}
 import ipc.Text
 
-object StreamingHeads extends App with LazyLogging {
+object SequentialStreamingHeads extends App with LazyLogging {
 
 
   val adam: Stream[Pure, String] = Stream.emits(Text.adam)
