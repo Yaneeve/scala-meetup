@@ -13,12 +13,13 @@ object SequentialStreamingHeads extends App with LazyLogging {
   val adam: Stream[Pure, String] = Stream.emits(Text.adam)
   val beatrix: Stream[Pure, String] = Stream.emits(Text.beatrix)
 
-  val interlocutors: Stream[Pure, (String, String)] = adam.zipWith(beatrix){case (l1, l2) => (s"Beatrix said: $l2", s"Adam said: $l1")}
+  val interlocutors: Stream[Pure, (String, String)] = adam.zipWith(beatrix){case (l1, l2) => ( s"Adam said: $l1", s"Beatrix said: $l2")}
   val log = for {
     i <- interlocutors
     p <- Stream.eval(IO{
       val (a,b) = i
-      logger.info(s"$a &&& $b")})
+      logger.info(s"$a")
+      logger.info(s"$b")})
   } yield p
 
   val drain: IO[Unit] = log.compile.drain
