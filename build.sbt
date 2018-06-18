@@ -19,6 +19,7 @@ lazy val commonLibs = Seq(
 lazy val concurrency = project.settings(commonSettings,
   libraryDependencies := commonLibs ++ Seq(
     "com.typesafe.akka" %% "akka-actor" % "2.5.13",
+    "com.typesafe.akka" %% "akka-stream" % "2.5.13",
     "org.typelevel" %% "cats-effect" % "1.0.0-RC2",
     "co.fs2" %% "fs2-core" % "1.0.0-M1"
 
