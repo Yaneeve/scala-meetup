@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 import cats.effect.IO
-
+import cats.implicits._
 
 object ExceptionalIO extends App with LazyLogging {
 
@@ -19,7 +19,7 @@ object ExceptionalIO extends App with LazyLogging {
     if (divisor == 0 )
       IO.fromEither(Left(ShouldntDoThat))
 //      IO.raiseError(ShouldntDoThat)
-    ///throw ShouldntDoThat
+//    throw ShouldntDoThat
     else IO {dividend.toFloat / divisor
   }
 
@@ -42,14 +42,16 @@ object ExceptionalIO extends App with LazyLogging {
     logger.info(calc2)
   }).unsafeRunSync()
 
-//  result(
-//  (calculate(1, 2, 3), //pass
-////    Future.successful("hello"))
-//      calculate(1, -1, 1)) //fail
-//  mapN{case (calc1, calc2) =>
-//    logger.info(calc1)
-//    logger.info(calc2)
-//  }, 5 seconds)
+
+//  ((calculate(1, 2, 3),
+//    calculate(1, -1, 1)
+////    IO.pure("1.2")
+//  ) mapN { case (calc1, calc2) =>
+//    IO {
+//      logger.info(calc1)
+//      logger.info(calc2)
+//    }
+//  }).unsafeRunSync()
 
   logger.info("I want to be printed")
 }
