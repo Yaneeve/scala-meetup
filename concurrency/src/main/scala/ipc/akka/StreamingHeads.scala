@@ -7,6 +7,10 @@ import akka.stream.scaladsl.Source
 import com.typesafe.scalalogging.LazyLogging
 import ipc.Text
 
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.postfixOps
+
 object StreamingHeads extends App with LazyLogging {
 
   implicit val system = ActorSystem("streaming-heads")
@@ -22,6 +26,7 @@ object StreamingHeads extends App with LazyLogging {
         logger.info(s"$b")
       }
 
-
+  val terminate: Runnable = () => system.terminate()
+  system.scheduler.scheduleOnce(5 seconds, terminate)
 
 }

@@ -2,10 +2,13 @@ package ipc.akka
 
 import akka.NotUsed
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
-import akka.stream.stage.{GraphStage, GraphStageLogic}
-import akka.stream.{ActorMaterializer, Attributes, Inlet, SinkShape}
 import ipc.Text
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object StreamingHeadsActorSink extends App {
 
@@ -26,8 +29,8 @@ object StreamingHeadsActorSink extends App {
   class Printer extends Actor with ActorLogging {
     override def receive: Receive = {
       case (a: String, b: String) =>
-        log.info(s"$a")
-        log.info(s"$b")
+        log.info(s"Adam said: $a")
+        log.info(s"Btrx said: $b")
         sender() ! Ack
       case Init =>
         log.debug("begin")
@@ -42,5 +45,8 @@ object StreamingHeadsActorSink extends App {
 
   val sink = Sink.actorRefWithAck(system.actorOf(Props[Printer], "printer"), Init, Ack, Complete)
   zipped.runWith(sink)
+
+  val terminate: Runnable = () => system.terminate()
+  system.scheduler.scheduleOnce(5 seconds, terminate)
 
 }
