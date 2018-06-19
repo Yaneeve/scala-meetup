@@ -10,10 +10,11 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import cats.Semigroup
 import cats.implicits._
 import wordcount.alg.Alg
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object ParMapNCalc extends App with Alg with LazyLogging {
 
-  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
+//  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
 
   val start = System.nanoTime()
 

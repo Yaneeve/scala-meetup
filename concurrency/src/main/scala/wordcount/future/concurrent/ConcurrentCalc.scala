@@ -17,6 +17,7 @@ import scala.language.postfixOps
 
 object ConcurrentCalc extends App with Alg with LazyLogging {
 
+  // TODO uncomment
   //  implicit val ec: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(200))
 
   val start = System.nanoTime()

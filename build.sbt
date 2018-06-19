@@ -28,5 +28,6 @@ lazy val concurrency = project.settings(commonSettings,
 
 lazy val errors = project.settings(commonSettings,
   libraryDependencies := commonLibs++ Seq(
-    "org.typelevel" %% "cats-effect" % "1.0.0-RC2"
+    "org.typelevel" %% "cats-effect" % "1.0.0-RC2",
+    "co.fs2" %% "fs2-core" % "1.0.0-M1"
   ))

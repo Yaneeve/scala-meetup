@@ -36,6 +36,9 @@ object SeqCalc extends App with Alg with LazyLogging {
     _ <- winner
   } yield ()
 
+  // TODO uncomment
+//  val prog = (print, winner).mapN((_, _) => ())
+
   prog.unsafeRunSync()
 
 

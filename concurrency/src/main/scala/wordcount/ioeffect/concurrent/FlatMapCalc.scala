@@ -28,8 +28,8 @@ object FlatMapCalc extends App with Alg with LazyLogging {
   implicit val intAdditionSemigroup: Semigroup[Int] = (x: Int, y: Int) => x + y
 
   val eventualWordCount: IO[Map[String, Int]] = for {
-    m1 <- wordCount1 //<* IO.shift
-    m2 <- wordCount2 //<* IO.shift
+    m1 <- wordCount1 // <* IO.shift // TODO uncomment 2nd
+    m2 <- wordCount2 // <* IO.shift // TODO uncomment 1st
   } yield m1 |+| m2
 
   val max: IO[(String, Int)] = eventualWordCount.map(max(_))
