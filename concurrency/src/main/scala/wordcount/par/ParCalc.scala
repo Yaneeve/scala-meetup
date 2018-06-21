@@ -1,4 +1,4 @@
-package wordcount.future.par
+package wordcount.par
 
 import com.typesafe.scalalogging.LazyLogging
 import wordcount.Text

@@ -1,18 +1,15 @@
-package wordcount.future.concurrent
+package wordcount.future
 
-import java.util.concurrent.Executors
-
-import com.typesafe.scalalogging.LazyLogging
-import wordcount.Text
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
-import scala.concurrent.Await.result
-import scala.concurrent.duration._
 import cats.Semigroup
 import cats.implicits._
+import com.typesafe.scalalogging.LazyLogging
+import wordcount.Text
 import wordcount.alg.Alg
 
+import scala.concurrent.Await.result
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.language.postfixOps
 
 object ConcurrentCalc extends App with Alg with LazyLogging {
