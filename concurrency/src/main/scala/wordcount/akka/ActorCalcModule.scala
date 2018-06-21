@@ -4,6 +4,11 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import cats.Semigroup
 import cats.implicits._
 import com.typesafe.scalalogging.LazyLogging
+
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.postfixOps
+
 import wordcount.alg.Alg
 
 object ActorCalcModule extends Alg with LazyLogging {
@@ -49,12 +54,16 @@ object ActorCalcModule extends Alg with LazyLogging {
 
         mapReduce.toSeq.foreach(tup => logger.debug(s"{${self.path}} ${tup.toString}"))
         logger.info(s"{${self.path}} ---> and the winner is: " + m + " <--- calc time is :" + (end - start) / 1000000.0)
-
-        system.terminate()
     }
   }
 
   val system = ActorSystem("word-count")
 
+  def shutdown() = {
+
+    val terminate: Runnable = () => system.terminate()
+    system.scheduler.scheduleOnce(5 seconds, terminate)
+
+  }
 
 }

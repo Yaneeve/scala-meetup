@@ -18,4 +18,5 @@ object ConcurrentRouterDispatcherCalc extends App  {
   router ! PayLoad(texts._1)
   router ! PayLoad(texts._2)
 
+  shutdown()
 }

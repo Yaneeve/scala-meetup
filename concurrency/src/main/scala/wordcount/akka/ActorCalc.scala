@@ -16,4 +16,6 @@ object ActorCalc extends App {
   mapper ! PayLoad(texts._1)
   mapper ! PayLoad(texts._2)
 
+  shutdown()
+
 }

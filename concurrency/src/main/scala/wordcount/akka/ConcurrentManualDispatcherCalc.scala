@@ -22,4 +22,5 @@ object ConcurrentManualDispatcherCalc extends App {
   mapper1 ! PayLoad(texts._1)
   mapper2 ! PayLoad(texts._2)
 
+  shutdown()
 }
